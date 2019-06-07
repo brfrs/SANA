@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "computeGraphlets.hpp"
+#include "utils.h"
 using namespace std;
 
 
@@ -757,7 +758,7 @@ void writeResults(int g=5) {
     fout.close();
 }
 
-std::vector<std::vector<uint> > computeGraphlets(int maxGraphletSize, string graphFileName) {
+std::vector<std::vector<float> > computeGraphlets(int maxGraphletSize, string graphFileName) {
     if (!init(maxGraphletSize, graphFileName.c_str())) {
         throw "Could not initialize computeGraphlets";
     }
@@ -787,3 +788,29 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 #endif
+
+const unordered_map<int, int> CONNECTED_ODV_ENTRY_NUMS =
+{
+    {3, 3},
+    {4, 15},
+    {5, }
+};
+
+std::vector<std::vector<float>> approxGraphlets(int maxGraphletSize, std::string graphFileName, int sampNum, int sampMethod0)
+{
+    char* blantPath;
+    FILE* fp;
+
+    blantPath = getenv("BLANTPATH");
+
+    if (blantPath == NULL)
+    {
+        cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANTPATH to the path of blant executable." << endl;
+        exit(1);
+    }
+
+    for (int i = 3; i <= maxGraphletSize; ++i)
+    {
+        fp = popen(blantPath, "");
+    }
+}
