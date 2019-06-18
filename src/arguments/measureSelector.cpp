@@ -312,24 +312,24 @@ void initMeasures(MeasureCombination& M, Graph& G1, Graph& G2, ArgumentParser& a
     }
 
     if (shouldInit("graphlet", G1, G2, args)) {
-        m = new Graphlet(&G1, &G2);
+        m = new Graphlet(&G1, &G2, args);
         double graphletWeight = getWeight("graphlet", G1, G2, args);
         M.addMeasure(m, graphletWeight);
     }
 
     if (shouldInit("graphletlgraal", G1, G2, args)) {
-        m = new GraphletLGraal(&G1, &G2);
+        m = new GraphletLGraal(&G1, &G2, args);
         double graphletLgraalWeight = getWeight("graphletlgraal", G1, G2, args);
         M.addMeasure(m, graphletLgraalWeight);
     }
 
     if (shouldInit("graphletcosine", G1, G2, args)) {
-        m = new GraphletCosine(&G1, &G2);
+        m = new GraphletCosine(&G1, &G2, args);
         double graphletWeight = getWeight("graphletcosine", G1, G2, args);
         M.addMeasure(m, graphletWeight);
     }
     if (shouldInit("graphletnorm", G1, G2, args)) {
-        m = new GraphletNorm(&G1, &G2);
+        m = new GraphletNorm(&G1, &G2, args);
         double graphletWeight = getWeight("graphletnorm", G1, G2, args);
         M.addMeasure(m, graphletWeight);
     }

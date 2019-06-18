@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 #include <set>
+#include <sstream>
 #include <unordered_map>
 #include <algorithm>
 #include <vector>

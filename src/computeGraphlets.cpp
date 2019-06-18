@@ -791,26 +791,67 @@ int main(int argc, char *argv[]) {
 
 const unordered_map<int, int> CONNECTED_ODV_ENTRY_NUMS =
 {
+    {2, 1},
     {3, 3},
-    {4, 15},
-    {5, }
+    {4, 11},
+    {5, 58},
+    {6, 407},
+    {7, 4306}
+
 };
 
-std::vector<std::vector<float>> approxGraphlets(int maxGraphletSize, std::string graphFileName, int sampNum, int sampMethod0)
+bool parseBlantOutput(std::vector<std::vector<float>>& out, FILE* fp, int k, int graphSize)
+{
+    for (int i = 0; i < graphSize; ++i)
+    {
+        
+        for (int j = 0; j < CONNECTED_ODV_ENTRY_NUMS.at(k); ++j)
+        {
+
+        }
+    }
+}
+
+vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& filename, int graphSize)
 {
     char* blantPath;
+    stringstream blantExe;
+    int odvSize = 0;
+
+    for (int i = 2; i <= maxGraphletSize; ++i)
+    {
+        odvSize += i;
+    }
+
+
+    auto result = vector<vector<float>>(graphSize, vector<float>(odvSize));
+
     FILE* fp;
 
-    blantPath = getenv("BLANTPATH");
+    blantPath = getenv("BLANT_PATH");
 
     if (blantPath == NULL)
     {
-        cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANTPATH to the path of blant executable." << endl;
+        cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANT_PATH to the path of blant executable." << endl;
         exit(1);
     }
 
     for (int i = 3; i <= maxGraphletSize; ++i)
     {
-        fp = popen(blantPath, "");
+        blantExe.write(blantPath, strlen(blantPath)); 
+        blantExe << "/blant " << blantArgs << " -k " << i << " " << filename;
+        fp = popen(blantExe.str().c_str(), "r");
+
+        if (fp == NULL)
+        {
+            cerr << "Could not create pipe for BLANT" << endl;
+            exit(1);
+        }
+
+        if (parseBlantOutput(result, fp, i))
+        {
+
+        }
+
     }
 }
