@@ -2151,14 +2151,18 @@ vector<vector<float> > Graph::computeGraphletDegreeVectors(int maxGraphletSize) 
 vector<vector<float> > Graph::approximateGraphletDegreeVectors(int maxGraphletSize, const string& blantArgs) {
 
     string fileName = "tmp/approx_gdvs.txt";
+    vector<int> degrees(getNumNodes(), 0);
 
     ofstream fout(fileName.c_str());
     for (uint i = 0; i < edgeList.size(); i++) {
         fout << edgeList[i][0] << " " << edgeList[i][1] << endl;
+        
+        ++degrees[edgeList[i][0]];
+        ++degrees[edgeList[i][1]];
     }
     fout.close();
 
-    vector<vector<float> > gdvs = approxGraphlets(maxGraphletSize, blantArgs, fileName, getNumNodes());
+    vector<vector<float> > gdvs = approxGraphlets(maxGraphletSize, blantArgs, fileName, getNumNodes(), degrees);
     return gdvs;
 }
 

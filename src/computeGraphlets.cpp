@@ -830,7 +830,7 @@ bool execBlant(std::vector<std::vector<float>>& out, stringstream& exe, int k, i
     return (readCount == k*graphSize + graphSize) && -1 != pclose(fp);
 }
 
-vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& fileName, int graphSize)
+vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& fileName, int graphSize, const vector<int>& nodeDegrees)
 {
     char* blantPath;
     stringstream blantExe;
@@ -851,6 +851,11 @@ vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantAr
     {
         cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANT_PATH to the path of blant executable." << endl;
         throw "$BLANT_PATH not set";
+    }
+
+    for (int i = 0; i < nodeDegrees.size(); ++i)
+    {
+        result[i][0] = nodeDegrees[i];
     }
 
     for (int i = 3; i <= maxGraphletSize; ++i)

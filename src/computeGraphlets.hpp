@@ -15,5 +15,5 @@
 #include <vector>
 
 vector<vector<float> > computeGraphlets(int maxGraphletSize, std::string graphFileName);
-vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& filename, int graphSize);
+vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& filename, int graphSize, const vector<int> nodeDegrees);
 #endif
