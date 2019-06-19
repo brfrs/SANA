@@ -14,6 +14,6 @@
 #include <algorithm>
 #include <vector>
 
-std::vector<std::vector<float> > computeGraphlets(int maxGraphletSize, std::string graphFileName);
-std::vector<std::vector<float>> approxGraphlets(int maxGraphletSize, std::string graphFileName, int sampNum, int sampMethod, int seed);
+vector<vector<float> > computeGraphlets(int maxGraphletSize, std::string graphFileName);
+vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& filename, int graphSize);
 #endif

@@ -269,19 +269,6 @@ void initGraphs(Graph& G1, Graph& G2, ArgumentParser& args) {
     Timer T2;
     T2.start();
 
-    double maxGraphletSize = args.doubles["-maxGraphletSize"];
-    if (maxGraphletSize){
-        G1.setMaxGraphletSize(maxGraphletSize);
-        G2.setMaxGraphletSize(maxGraphletSize);
-        //std::cout<<"\nSetting max graphlet size to: "<<maxGraphletSize<<endl;
-        if (maxGraphletSize == 5 || maxGraphletSize == 4)
-            std::cerr<<"Setting maximum graphlet size to "<<maxGraphletSize<<endl;
-        else{
-            std::cerr<<"ERROR: Invalid graphlet size: "<<maxGraphletSize<<"\nShould be 4 or 5\n";
-            exit(0);
-        }
-    }
-
     // For "-nodes-have-types"
     if(args.bools["-nodes-have-types"]){
         G1.nodesHaveTypesEnabled = true;

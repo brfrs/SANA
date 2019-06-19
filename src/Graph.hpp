@@ -35,7 +35,6 @@ public:
     static const int NODE_TYPE_GENE;  //= 1;
     static const int NODE_TYPE_MIRNA; // = 2;
 
-    void setMaxGraphletSize(double number);
     static Graph& loadGraph(string name, Graph& g);
     static Graph& loadGraphFromPath(string path, string name, Graph& g, bool nodesHaveTypes = false);
     static Graph& multGraph(string name, uint path, Graph& g);
@@ -125,7 +124,7 @@ public:
 
     uint randomNode();
 
-    vector<vector<uint> > loadGraphletDegreeVectors();
+    vector<vector<float> > loadGraphletDegreeVectors(int maxGraphletSize);
 
     unordered_map<string,uint> getNodeNameToIndexMap() const;
     unordered_map<uint,string> getIndexToNodeNameMap() const;
@@ -184,7 +183,6 @@ public:
 private:
     bool parseFloatWeight = false;
     Matrix<float> floatWeights;
-    double maxGraphletSize = 4; //default is 4, 5 is too big
     string name;
     string path;
     //double maxsize;
@@ -217,7 +215,8 @@ private:
     void removeRandomEdge();
 
     string autogenFilesFolder();
-    vector<vector<uint> > computeGraphletDegreeVectors();
+    vector<vector<float> > computeGraphletDegreeVectors(int maxGraphletSize);
+    vector<vector<float> > approximateGraphletDegreeVectors(int maxGraphletSize, const string& blantArgs);
 
     //places in dist a matrix with the distance between every pair of nodes (a -1 indicates infinity)
     void computeDistanceMatrix(vector<vector<short> >& dist) const;

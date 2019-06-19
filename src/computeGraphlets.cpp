@@ -768,7 +768,7 @@ std::vector<std::vector<float> > computeGraphlets(int maxGraphletSize, string gr
     else throw "The maximum graphlet size should be 4 or 5";
 
     int dgvSize = maxGraphletSize==4 ? 15 : 73; 
-    vector<vector<uint> > res(n, vector<uint> (dgvSize));
+    vector<vector<float> > res(n, vector<float> (dgvSize));
     for (int i = 0; i < n; i++)
         for (int j = 0; j < dgvSize; j++)
             res[i][j] = orbit[i][j];
@@ -800,19 +800,37 @@ const unordered_map<int, int> CONNECTED_ODV_ENTRY_NUMS =
 
 };
 
-bool parseBlantOutput(std::vector<std::vector<float>>& out, FILE* fp, int k, int graphSize)
+bool execBlant(std::vector<std::vector<float>>& out, stringstream& exe, int k, int graphSize, const string& fileName)
 {
-    for (int i = 0; i < graphSize; ++i)
+    int vertex;
+    float entry;
+    int readCount = 0;
+    int startIndex = CONNECTED_ODV_ENTRY_NUMS.at(k-1) + 1;
+    FILE* fp;
+
+    exe << " " << k << " " << fileName;
+
+    fp = popen(exe.str.c_str(), "r");
+
+    if (fp == NULL)
     {
-        
+        return false;
+    }
+
+    for (int i = 0; i < graphSize; ++i)
+    {   
+        readCount += fscanf(fp, "%u", vertex);
+
         for (int j = 0; j < CONNECTED_ODV_ENTRY_NUMS.at(k); ++j)
         {
-
+            readCount += fscanf(fp, "f", out[vertex][startIndex+j]);
         }
     }
+
+    return (readCount == k*graphSize + graphSize) && -1 != pclose(fp);
 }
 
-vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& filename, int graphSize)
+vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& fileName, int graphSize)
 {
     char* blantPath;
     stringstream blantExe;
@@ -820,9 +838,8 @@ vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantAr
 
     for (int i = 2; i <= maxGraphletSize; ++i)
     {
-        odvSize += i;
+        odvSize += CONNECTED_ODV_ENTRY_NUMS.at(i);
     }
-
 
     auto result = vector<vector<float>>(graphSize, vector<float>(odvSize));
 
@@ -833,25 +850,21 @@ vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantAr
     if (blantPath == NULL)
     {
         cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANT_PATH to the path of blant executable." << endl;
-        exit(1);
+        throw "$BLANT_PATH not set";
     }
 
     for (int i = 3; i <= maxGraphletSize; ++i)
     {
         blantExe.write(blantPath, strlen(blantPath)); 
-        blantExe << "/blant " << blantArgs << " -k " << i << " " << filename;
-        fp = popen(blantExe.str().c_str(), "r");
+        blantExe << "/blant " << blantArgs;
 
-        if (fp == NULL)
+        if (!execBlant(result, blantExe, i, graphSize, fileName))
         {
-            cerr << "Could not create pipe for BLANT" << endl;
-            exit(1);
+            throw "Error running BLANT";
         }
 
-        if (parseBlantOutput(result, fp, i))
-        {
-
-        }
-
+        blantExe.flush();
     }
+
+    return result;
 }
