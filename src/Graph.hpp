@@ -125,6 +125,7 @@ public:
     uint randomNode();
 
     vector<vector<float> > loadGraphletDegreeVectors(int maxGraphletSize);
+    vector<vector<float> > Graph::approximateGraphletDegreeVectors(int maxGraphletSize, const string& blantArgs);
 
     unordered_map<string,uint> getNodeNameToIndexMap() const;
     unordered_map<uint,string> getIndexToNodeNameMap() const;
