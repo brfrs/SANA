@@ -796,8 +796,8 @@ const unordered_map<int, int> CONNECTED_ODV_ENTRY_NUMS =
     {4, 11},
     {5, 58},
     {6, 407},
-    {7, 4306}
-
+    {7, 4306},
+    {8, 72490}
 };
 
 bool execBlant(std::vector<std::vector<float>>& out, stringstream& exe, int k, int graphSize, const string& fileName)
