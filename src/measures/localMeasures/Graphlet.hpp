@@ -1,10 +1,11 @@
 #ifndef GRAPHLET_HPP
 #define GRAPHLET_HPP
-#include "LocalMeasure.hpp"
+#include "GraphletBasedMeasure.hpp"
 
-class Graphlet: public LocalMeasure {
+class Graphlet: public GraphletBasedMeasure {
 public:
-    Graphlet(Graph* G1, Graph* G2);
+    Graphlet(Graph* G1, Graph* G2, int maxGraphletSize, 
+    const std::string& arg1, const std::string& arg2, bool approx);
     virtual ~Graphlet();
 
 private:

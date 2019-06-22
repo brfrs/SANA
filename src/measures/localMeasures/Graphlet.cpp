@@ -4,7 +4,13 @@
 #include "Graphlet.hpp"
 using namespace std;
 
-Graphlet::Graphlet(Graph* G1, Graph* G2) : LocalMeasure(G1, G2, "graphlet") {
+Graphlet::Graphlet(Graph* G1, Graph* G2, int maxGraphletSize, 
+    const std::string& arg1, const std::string& arg2, bool approx) 
+    : GraphletBasedMeasure(G1, G2, "graphlet", maxGraphletSize, arg1, arg2, approx) {
+    
+    if (maxGraphletSize > 5)
+        throw "K = 5 is not yet supported by the graphlet objective function";
+    
     string fileName = autogenMatricesFolder+G1->getName()+"_"+G2->getName()+"_graphlet.bin";
     loadBinSimMatrix(fileName);
 }
@@ -48,8 +54,8 @@ void Graphlet::initSimMatrix() {
     uint n1 = G1->getNumNodes();
     uint n2 = G2->getNumNodes();
     sims = vector<vector<float> > (n1, vector<float> (n2, 0));
-    vector<vector<uint> > gdvs1 = G1->loadGraphletDegreeVectors();
-    vector<vector<uint> > gdvs2 = G2->loadGraphletDegreeVectors();
+    vector<vector<float> > gdvs1 = getGDV(G1, blantArgs1);
+    vector<vector<float> > gdvs2 = getGDV(G2, blantArgs2);
 
     vector<double> orbitWeights = getOrbitWeights();
     double weightSum = getOrbitWeightSum();
