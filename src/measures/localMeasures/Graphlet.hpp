@@ -4,8 +4,7 @@
 
 class Graphlet: public GraphletBasedMeasure {
 public:
-    Graphlet(Graph* G1, Graph* G2, int maxGraphletSize, 
-    const std::string& arg1, const std::string& arg2, bool approx);
+    Graphlet(Graph* G1, Graph* G2, int maxGraphletSize, bool approx);
     virtual ~Graphlet();
 
 private:

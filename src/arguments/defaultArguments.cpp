@@ -33,5 +33,4 @@ vector<string> defaultArguments = {
 "-paretoCapacity 200",
 "-paretoIterations 10000",
 "-paretoThreads 1"
-"-approxGraphletOrbits false"
 };

@@ -2148,7 +2148,7 @@ vector<vector<float> > Graph::computeGraphletDegreeVectors(int maxGraphletSize) 
     return gdvs;
 }
 
-vector<vector<float> > Graph::approximateGraphletDegreeVectors(int maxGraphletSize, const string& blantArgs) {
+vector<vector<float> > Graph::approximateGraphletDegreeVectors(int maxGraphletSize) {
 
     string fileName = "tmp/approx_gdvs.txt";
     vector<int> degrees(getNumNodes(), 0);
@@ -2804,4 +2804,8 @@ uint Graph::getWeightedNumEdges() {
 
 bool Graph::hasFloatWeight() const {
     return parseFloatWeight;
+}
+
+void Graph::setBlantArgs(const string& args) {
+    blantArgs = args;
 }

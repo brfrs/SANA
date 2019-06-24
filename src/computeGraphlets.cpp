@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "computeGraphlets.hpp"
-#include "utils.h"
+#include "utils.hpp"
 using namespace std;
 
 
@@ -808,26 +808,27 @@ bool execBlant(std::vector<std::vector<float>>& out, stringstream& exe, int k, i
     int startIndex = CONNECTED_ODV_ENTRY_NUMS.at(k-1) + 1;
     FILE* fp;
 
-    exe << " " << k << " " << fileName;
+    exe << " -k " << k << " " << fileName;
 
-    fp = popen(exe.str.c_str(), "r");
+    fp = popen(exe.str().c_str(), "r");
 
     if (fp == NULL)
     {
         return false;
     }
 
+    cout << endl << exe.str() << endl;
+
     for (int i = 0; i < graphSize; ++i)
     {   
-        readCount += fscanf(fp, "%u", vertex);
-
+        readCount += fscanf(fp, "%u", &vertex);
         for (int j = 0; j < CONNECTED_ODV_ENTRY_NUMS.at(k); ++j)
         {
-            readCount += fscanf(fp, "f", out[vertex][startIndex+j]);
+            readCount += fscanf(fp, "%f", &out[vertex][startIndex+j]);
         }
     }
 
-    return (readCount == k*graphSize + graphSize) && -1 != pclose(fp);
+    return (readCount == CONNECTED_ODV_ENTRY_NUMS.at(k)*graphSize + graphSize) && -1 != pclose(fp);
 }
 
 vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantArgs, const string& fileName, int graphSize, const vector<int>& nodeDegrees)
@@ -843,13 +844,11 @@ vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantAr
 
     auto result = vector<vector<float>>(graphSize, vector<float>(odvSize));
 
-    FILE* fp;
-
-    blantPath = getenv("BLANT_PATH");
+    blantPath = getenv("BLANT_DIR");
 
     if (blantPath == NULL)
     {
-        cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANT_PATH to the path of blant executable." << endl;
+        cerr << "BLANT is required to approximate graphlet-based objective functions. Please set the environment variable $BLANT_DIR to the path of blant executable." << endl;
         throw "$BLANT_PATH not set";
     }
 
@@ -868,7 +867,16 @@ vector<vector<float>> approxGraphlets(int maxGraphletSize, const string& blantAr
             throw "Error running BLANT";
         }
 
-        blantExe.flush();
+        blantExe.str("");
+    }
+
+    for (const auto& v : result)
+    {
+        for (const auto& i : v)
+        {
+            cout << i << " ";
+        }
+        cout << endl;
     }
 
     return result;

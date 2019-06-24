@@ -125,8 +125,8 @@ public:
     uint randomNode();
 
     vector<vector<float> > loadGraphletDegreeVectors(int maxGraphletSize);
-    vector<vector<float> > Graph::approximateGraphletDegreeVectors(int maxGraphletSize, const string& blantArgs);
-
+    vector<vector<float> > approximateGraphletDegreeVectors(int maxGraphletSize);
+    
     unordered_map<string,uint> getNodeNameToIndexMap() const;
     unordered_map<uint,string> getIndexToNodeNameMap() const;
 
@@ -149,6 +149,8 @@ public:
     bool isWellDefined();
 
     bool sameNodeNames(const Graph& other) const;
+
+    void setBlantArgs(const std::string& args);
 
     // For locking
     void setLockedList(vector<string>& nodes, vector<string>& pairs);
@@ -184,6 +186,8 @@ public:
 private:
     bool parseFloatWeight = false;
     Matrix<float> floatWeights;
+    string blantArgs;
+
     string name;
     string path;
     //double maxsize;
@@ -217,7 +221,6 @@ private:
 
     string autogenFilesFolder();
     vector<vector<float> > computeGraphletDegreeVectors(int maxGraphletSize);
-    vector<vector<float> > approximateGraphletDegreeVectors(int maxGraphletSize, const string& blantArgs);
 
     //places in dist a matrix with the distance between every pair of nodes (a -1 indicates infinity)
     void computeDistanceMatrix(vector<vector<short> >& dist) const;

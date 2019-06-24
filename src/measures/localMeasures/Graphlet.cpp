@@ -4,9 +4,8 @@
 #include "Graphlet.hpp"
 using namespace std;
 
-Graphlet::Graphlet(Graph* G1, Graph* G2, int maxGraphletSize, 
-    const std::string& arg1, const std::string& arg2, bool approx) 
-    : GraphletBasedMeasure(G1, G2, "graphlet", maxGraphletSize, arg1, arg2, approx) {
+Graphlet::Graphlet(Graph* G1, Graph* G2, int maxGraphletSize, bool approx) 
+    : GraphletBasedMeasure(G1, G2, "graphlet", maxGraphletSize, approx) {
     
     if (maxGraphletSize > 5)
         throw "K = 5 is not yet supported by the graphlet objective function";
@@ -35,7 +34,7 @@ vector<double> Graphlet::getNumbersOfAffectedOrbits() {
 
 vector<double> Graphlet::getOrbitWeights() {
     vector<double> res = getNumbersOfAffectedOrbits();
-    for (uint i = 0; i < NUM_ORBITS; i++) {
+    for (uint i = 0; i < maxK; i++) {
         res[i] = 1 - log10(res[i])/log10(NUM_ORBITS);
     }
     return res;
@@ -44,7 +43,7 @@ vector<double> Graphlet::getOrbitWeights() {
 double Graphlet::getOrbitWeightSum() {
     vector<double> orbitWeights = getOrbitWeights();
     double res = 0;
-    for (uint i = 0; i < NUM_ORBITS; i++) {
+    for (uint i = 0; i < maxK; i++) {
         res += orbitWeights[i];
     }
     return res;
@@ -54,15 +53,15 @@ void Graphlet::initSimMatrix() {
     uint n1 = G1->getNumNodes();
     uint n2 = G2->getNumNodes();
     sims = vector<vector<float> > (n1, vector<float> (n2, 0));
-    vector<vector<float> > gdvs1 = getGDV(G1, blantArgs1);
-    vector<vector<float> > gdvs2 = getGDV(G2, blantArgs2);
+    vector<vector<float> > gdvs1 = getGDV(G1);
+    vector<vector<float> > gdvs2 = getGDV(G2);
 
     vector<double> orbitWeights = getOrbitWeights();
     double weightSum = getOrbitWeightSum();
     for (uint i = 0; i < n1; i++) {
         for (uint j = 0; j < n2; j++) {
             double orbitDistanceSum = 0;
-            for (uint k = 0; k < NUM_ORBITS; k++) {
+            for (uint k = 0; k < maxK; k++) {
                 orbitDistanceSum += orbitWeights[k] *
                     abs(log2(gdvs1[i][k] + 1) - log2(gdvs2[j][k] + 1)) /
                     log2(max(gdvs1[i][k], gdvs2[j][k]) + 2);

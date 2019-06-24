@@ -1,10 +1,10 @@
 #include "GraphletBasedMeasure.hpp"
-#include "computeGraphlets.hpp"
+#include "../../computeGraphlets.hpp"
 
-std::vector<std::vector<float>> GraphletBasedMeasure::getGDV(Graph* g, const std::string& blantArgs) const
+std::vector<std::vector<float>> GraphletBasedMeasure::getGDV(Graph* g) const
 {
-    if (estimateGraphlet)
+    if (!estimateGraphlet)
         return g->loadGraphletDegreeVectors(maxK);
     else
-        return g->approximateGraphletDegreeVectors(maxK, blantArgs);
+        return g->approximateGraphletDegreeVectors(maxK);
 }

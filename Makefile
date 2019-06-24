@@ -68,7 +68,8 @@ MEASURES_SRCS = 							\
 	src/measures/localMeasures/NodeDensity.cpp 			\
 	src/measures/localMeasures/Sequence.cpp 			\
 	src/measures/localMeasures/GraphletCosine.cpp 			\
-	src/measures/localMeasures/GraphletNorm.cpp
+	src/measures/localMeasures/GraphletNorm.cpp			\
+	src/measures/localMeasures/GraphletBasedMeasure.cpp
 
 METHODS_SRC =   							\
 	src/methods/GreedyLCCS.cpp 					\
