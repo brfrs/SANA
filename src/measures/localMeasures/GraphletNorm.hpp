@@ -1,21 +1,20 @@
 #ifndef GRAPHLETNORM_HPP
 #define GRAPHLETNORM_HPP
-#include "LocalMeasure.hpp"
+#include "GraphletBasedMeasure.hpp"
 
-class GraphletNorm: public LocalMeasure {
+class GraphletNorm: public GraphletBasedMeasure {
 public:
-    GraphletNorm(Graph* G1, Graph* G2);
+    GraphletNorm(Graph* G1, Graph* G2, int maxGraphletSize, bool approx);
     virtual ~GraphletNorm();
 
 private:
     void initSimMatrix();
-    double magnitude(vector<uint> vector);
-    const uint NUM_ORBITS = 73;
-    vector<double> NODV(vector<uint> v);
-    double ODVratio(vector<double> u, vector<double> v, uint i);
-    double ODVdiff(vector<uint> u, vector<uint> v);
-    double ODVsim(vector<uint> u, vector<uint> v);
-    vector<uint> reduce(vector<uint> v);
+    double magnitude(const vector<float>& vector);
+    vector<double> NODV(const vector<float>& v);
+    double ODVratio(const vector<double>& u, const vector<double>& v, uint i);
+    double ODVdiff(const vector<float>& u, const vector<float>& v);
+    double ODVsim(const vector<float>& u, const vector<float>& v);
+    vector<float> reduce(const vector<float>& v);
     
 };
 

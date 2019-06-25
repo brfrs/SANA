@@ -5,7 +5,7 @@
 using namespace std;
 
 
-GraphletNorm::GraphletNorm(Graph* G1, Graph* G2) : LocalMeasure(G1, G2, "graphletnorm") {
+GraphletNorm::GraphletNorm(Graph* G1, Graph* G2, int maxGraphletSize, bool approx) : GraphletBasedMeasure(G1, G2, "graphletnorm", maxGraphletSize, approx) {
     string fileName = autogenMatricesFolder+G1->getName()+"_"+G2->getName()+"_graphletnorm.bin";
     loadBinSimMatrix(fileName);
 }
@@ -14,7 +14,7 @@ GraphletNorm::~GraphletNorm() {
 }
 
 //return the magnitude of vector
-double GraphletNorm::magnitude(vector<uint> vector) {
+double GraphletNorm::magnitude(const vector<float>& vector) {
     double res = 0;
     for(uint i = 0; i < vector.size(); ++i) {
         res += vector[i] * static_cast<double>(vector[i]);
@@ -24,7 +24,7 @@ double GraphletNorm::magnitude(vector<uint> vector) {
 }
 
 //return the unit vector of v
-vector<double> GraphletNorm::NODV(vector<uint> v){
+vector<double> GraphletNorm::NODV(const vector<float>& v){
     vector<double> res;
     double mag = magnitude(v);
     if(mag == 0){
@@ -37,13 +37,13 @@ vector<double> GraphletNorm::NODV(vector<uint> v){
     return res;
 }
 
-double GraphletNorm::ODVratio(vector<double> u, vector<double> v, uint i){
+double GraphletNorm::ODVratio(const vector<double>& u, const vector<double>& v, uint i){
     if(u[i] == v[i]) return 1;
     return min(u[i], v[i]) / max(u[i], v[i]);
 }
 
 //use RMSD between the ratio vector and a vector of 1's
-double GraphletNorm::ODVdiff(vector<uint> u, vector<uint> v){
+double GraphletNorm::ODVdiff(const vector<float>& u, const vector<float>& v){
     vector<double> nU = NODV(u);
     vector<double> nV = NODV(v);
 
@@ -55,12 +55,12 @@ double GraphletNorm::ODVdiff(vector<uint> u, vector<uint> v){
     return sqrt(sum/v.size());
 }
 
-double GraphletNorm::ODVsim(vector<uint> u, vector<uint> v){
+double GraphletNorm::ODVsim(const vector<float>& u, const vector<float>& v){
     return 1 - ODVdiff(u, v);
 }
 
-vector<uint> GraphletNorm::reduce(vector<uint> v) {
-    vector<uint> res(11);
+vector<float> GraphletNorm::reduce(const vector<float>& v) {
+    vector<float> res(11);
     res[0] = v[0];
     res[1] = v[1];
     res[2] = v[2];
@@ -82,16 +82,16 @@ void GraphletNorm::initSimMatrix() {
     uint n1 = G1->getNumNodes();
     uint n2 = G2->getNumNodes();
     sims = vector<vector<float> > (n1, vector<float> (n2, 0));
-    vector<vector<uint> > gdvs1 = G1->loadGraphletDegreeVectors();
-    vector<vector<uint> > gdvs2 = G2->loadGraphletDegreeVectors();
+    vector<vector<float> > gdvs1 = getGDV(G1);
+    vector<vector<float> > gdvs2 = getGDV(G2);
 
     for (uint i = 0; i < n1; i++) {
         for (uint j = 0; j < n2; j++) {
 
 
             if (shouldReduce) {
-                vector<uint> v1 = reduce(gdvs1[i]);
-                vector<uint> v2 = reduce(gdvs2[j]);
+                vector<float> v1 = reduce(gdvs1[i]);
+                vector<float> v2 = reduce(gdvs2[j]);
 
                 sims[i][j] = ODVsim(v1, v2);
             } else {

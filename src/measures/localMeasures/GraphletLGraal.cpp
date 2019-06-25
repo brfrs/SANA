@@ -4,7 +4,7 @@
 #include "GraphletLGraal.hpp"
 using namespace std;
 
-GraphletLGraal::GraphletLGraal(Graph* G1, Graph* G2) : LocalMeasure(G1, G2, "graphletlgraal") {
+GraphletLGraal::GraphletLGraal(Graph* G1, Graph* G2, int maxGraphletSize, bool approx) : GraphletBasedMeasure(G1, G2, "graphletlgraal", maxGraphletSize, approx) {
     string fileName = autogenMatricesFolder+G1->getName()+"_"+G2->getName()+"_graphletlgraal.bin";
     loadBinSimMatrix(fileName);
 }
@@ -12,26 +12,25 @@ GraphletLGraal::GraphletLGraal(Graph* G1, Graph* G2) : LocalMeasure(G1, G2, "gra
 GraphletLGraal::~GraphletLGraal() {
 }
 
-double GraphletLGraal::gdvSim(uint i, uint j,
-    const vector<vector<uint> >& gdvsG1, const vector<vector<uint> >& gdvsG2) {
+double GraphletLGraal::gdvSim(const vector<float>& gdvG1, const vector<float>& gdvG2) {
     double total = 0;
-    for (uint k = 0; k < 15; k++) {
-        double m = max(gdvsG1[i][k],gdvsG2[j][k]);
-        if (m > 0) total += min(gdvsG1[i][k],gdvsG2[j][k])/m;
+    for (uint k = 0; k < gdvG1.size(); k++) {
+        double m = max(gdvG1[k],gdvG2[k]);
+        if (m > 0) total += min(gdvG1[k],gdvG2[k])/m;
     }
-    return total/15;
+    return total/gdvG1.size();
 }
 
 void GraphletLGraal::initSimMatrix() {
     uint n1 = G1->getNumNodes();
     uint n2 = G2->getNumNodes();
     sims = vector<vector<float> > (n1, vector<float> (n2, 0));
-    vector<vector<uint> > gdvs1 = G1->loadGraphletDegreeVectors();
-    vector<vector<uint> > gdvs2 = G2->loadGraphletDegreeVectors();
+    vector<vector<float> > gdvs1 = getGDV(G1);
+    vector<vector<float> > gdvs2 = getGDV(G2);
 
     for (uint i = 0; i < n1; i++) {
         for (uint j = 0; j < n2; j++) {
-            sims[i][j] = gdvSim(i,j,gdvs1,gdvs2);
+            sims[i][j] = gdvSim(gdvs1[i], gdvs2[j]);
         }
     }
 }

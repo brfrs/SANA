@@ -1,19 +1,18 @@
 #ifndef GRAPHLETCOSINE_HPP
 #define GRAPHLETCOSINE_HPP
-#include "LocalMeasure.hpp"
+#include "GraphletBasedMeasure.hpp"
 
-class GraphletCosine: public LocalMeasure {
+class GraphletCosine: public GraphletBasedMeasure {
 public:
-    GraphletCosine(Graph* G1, Graph* G2);
+    GraphletCosine(Graph* G1, Graph* G2, int maxGraphletSize, bool approx);
     virtual ~GraphletCosine();
 
 private:
     void initSimMatrix();
-    vector<uint> reduce(vector<uint> v);
-    const uint NUM_ORBITS = 73;
-    double cosineSimilarity(vector<uint> v1, vector<uint> v2);
-    double dot(vector<uint> v1, vector<uint> v2);
-    double magnitude(vector<uint> vector);
+    vector<float> reduce(const vector<float>& v);
+    double cosineSimilarity(const vector<float>& v1, const vector<float>& v2);
+    double dot(const vector<float>& v1, const vector<float>& v2);
+    double magnitude(const vector<float>& v);
 };
 
 #endif

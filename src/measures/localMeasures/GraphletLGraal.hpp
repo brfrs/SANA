@@ -1,17 +1,16 @@
 #ifndef GRAPHLETLGRAAL_HPP
 #define GRAPHLETLGRAAL_HPP
-#include "LocalMeasure.hpp"
+#include "GraphletBasedMeasure.hpp"
 
-class GraphletLGraal: public LocalMeasure {
+class GraphletLGraal: public GraphletBasedMeasure {
 public:
-    GraphletLGraal(Graph* G1, Graph* G2);
+    GraphletLGraal(Graph* G1, Graph* G2, int maxGraphletSize, bool approx);
     virtual ~GraphletLGraal();
 
 private:
     void initSimMatrix();
     
-    double gdvSim(uint i, uint j, const vector<vector<uint> >& gdvsG1,
-        const vector<vector<uint> >& gdvsG2);
+    double gdvSim(const vector<float>& gdvG1, const vector<float>& gdvG2);
 
 };
 

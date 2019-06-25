@@ -14,7 +14,7 @@ public:
     
     std::vector<std::vector<float>> getGDV(Graph* g) const;
 
-    const int maxK;
+    const uint maxK;
     const bool estimateGraphlet;
 
 };
